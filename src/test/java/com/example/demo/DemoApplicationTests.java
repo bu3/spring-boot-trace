@@ -8,12 +8,14 @@ import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,11 +50,17 @@ class DemoApplicationTests {
         RestTemplate restTemplate = new RestTemplate();
         try {
             RequestEntity<Void> requestEntity = new RequestEntity<>(TRACE, new URI(url));
-            restTemplate.exchange(requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
+            assertThat(response.getStatusCode(), Matchers.equalTo(METHOD_NOT_ALLOWED));
         }
         catch (org.springframework.web.client.HttpClientErrorException e) {
             assertThat(e.getStatusCode(), Matchers.equalTo(METHOD_NOT_ALLOWED));
+            return;
         }
+        catch (Exception e) {
+            Assertions.fail("Should never reach this point", e);
+        }
+        Assertions.fail("Should never reach this point");
     }
 
 }

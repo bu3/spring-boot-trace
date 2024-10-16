@@ -11,6 +11,7 @@ public class CustomDispatcherServlet extends DispatcherServlet {
 
     @Override
     protected void doTrace(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("TRACE IS NOT ALLOWED");
         response.sendError(SC_METHOD_NOT_ALLOWED);
     }
 }
