@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.server;
 
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.security.ConstraintAware;
