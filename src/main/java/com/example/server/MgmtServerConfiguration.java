@@ -42,7 +42,6 @@ public class MgmtServerConfiguration {
 
     private ConstraintMapping newMethodConstraintMapping(String method) {
         Constraint constraint = Constraint.from("Disable " + method, Constraint.Authorization.ANY_USER);
-
         ConstraintMapping mapping = new ConstraintMapping();
         mapping.setConstraint(constraint);
         mapping.setMethod(method);
