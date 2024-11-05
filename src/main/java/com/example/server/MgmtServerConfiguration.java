@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 public class MgmtServerConfiguration {
 
     @Bean
-    WebServerFactoryCustomizer<JettyServletWebServerFactory> disableSniHostCheck() {
+    WebServerFactoryCustomizer<JettyServletWebServerFactory> disableTrace() {
         return (factory) -> {
             factory.addServerCustomizers((server) -> {
                 ServletContextHandler servletContextHandler = findServletContextHandler(server);
