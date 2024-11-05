@@ -6,17 +6,20 @@ import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
 import org.eclipse.jetty.security.Constraint;
 import org.eclipse.jetty.server.Handler;
 import org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration;
-import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer;
+import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 
-@ManagementContextConfiguration
+@ManagementContextConfiguration(proxyBeanMethods = false)
 public class MgmtServerConfiguration {
 
     @Bean
-    JettyServerCustomizer mgmtJettyServerCustomizer() {
-        return (server) -> {
-            ServletContextHandler servletContextHandler = findServletContextHandler(server);
-            disableTraceMethodForHandler(servletContextHandler);
+    WebServerFactoryCustomizer<JettyServletWebServerFactory> disableSniHostCheck() {
+        return (factory) -> {
+            factory.addServerCustomizers((server) -> {
+                ServletContextHandler servletContextHandler = findServletContextHandler(server);
+                disableTraceMethodForHandler(servletContextHandler);
+            });
         };
     }
 
@@ -41,11 +44,13 @@ public class MgmtServerConfiguration {
     }
 
     private ConstraintMapping newMethodConstraintMapping(String method) {
-        Constraint constraint = Constraint.from("Disable " + method, Constraint.Authorization.ANY_USER);
+        Constraint.Builder constraintBuilder = new Constraint.Builder();
+        constraintBuilder.authorization(Constraint.Authorization.ANY_USER);
+        Constraint constraint = constraintBuilder.build();
         ConstraintMapping mapping = new ConstraintMapping();
         mapping.setConstraint(constraint);
         mapping.setMethod(method);
-        mapping.setPathSpec("/");
+        mapping.setPathSpec("/*");
 
         return mapping;
     }

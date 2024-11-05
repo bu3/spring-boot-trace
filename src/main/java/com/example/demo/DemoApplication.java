@@ -17,5 +17,5 @@ public class DemoApplication {
 	public CustomDispatcherServlet dispatcherServlet() {
 		return new CustomDispatcherServlet();
 	}
-	
+
 }
